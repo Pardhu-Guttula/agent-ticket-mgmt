@@ -29,25 +29,25 @@ docker pull "${FE_IMAGE2}:${FE_TAG2}"
 echo "Pulling image ${BE_IMAGE}:${BE_TAG}..."
 docker pull "${BE_IMAGE}:${BE_TAG}"
 
-# echo "Current directory: $(pwd)"
+echo "Current directory: $(pwd)"
 
-# # Change to the directory containing docker-compose.yml if needed
-# cd /home/ubuntu/deploy || { echo "Directory not found"; exit 1; }
+# Change to the directory containing docker-compose.yml if needed
+cd /home/ubuntu/deploy || { echo "Directory not found"; exit 1; }
 
-# # Check if docker-compose.yml exists
-# if [ -f "./docker-compose.yml" ]; then
-#     echo "docker-compose.yml found."
-# else
-#     echo "docker-compose.yml not found!"
-#     exit 1
-# fi
+# Check if docker-compose.yml exists
+if [ -f "./docker-compose.yml" ]; then
+    echo "docker-compose.yml found."
+else
+    echo "docker-compose.yml not found!"
+    exit 1
+fi
 
-# echo "Checking for docker-compose.yml..."
-# ls -l ./docker-compose.yml
+echo "Checking for docker-compose.yml..."
+ls -l ./docker-compose.yml
 
-# echo "FE_TAG1=${FE_TAG1}"
-# echo "FE_TAG2=${FE_TAG2}"
-# echo "BE_TAG=${BE_TAG}"
+echo "FE_TAG1=${FE_TAG1}"
+echo "FE_TAG2=${FE_TAG2}"
+echo "BE_TAG=${BE_TAG}"
 
 # Update docker-compose.yml with the latest tags
 echo "Updating docker-compose.yml with the latest tags..."
