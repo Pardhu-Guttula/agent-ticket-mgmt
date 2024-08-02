@@ -15,7 +15,7 @@
     #     state: present
     # - name: Start Docker service
     #   systemd:
-    #     name: docker  
+    #     name: docker
     #     state: started
     #     enabled: yes
     # - name: Install docker-py python module
@@ -25,9 +25,14 @@
 
     # - name: Start the new container
     #   command: "docker run --name {{ container_name }} -d -p 8088:80 pardhuguttula/ansible:{{ DOCKER_TAG }}"
-    
+    - name: Copy docker-compose.yml to target server
+      become: yes
+      copy:
+        src: ./docker-compose.yml
+        dest: /home/ubuntu/deploy/docker-compose.yml
+        mode: "0644"
     - name: Run the stop script
-      script: ./deploy.sh  # Assuming deploy.sh is in the same directory as the playbook
+      script: ./deploy.sh # Assuming deploy.sh is in the same directory as the playbook
       ignore_errors: yes
       register: script_output
 

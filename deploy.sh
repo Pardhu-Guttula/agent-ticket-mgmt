@@ -32,7 +32,7 @@
 echo "Current directory: $(pwd)"
 
 # Change to the directory containing docker-compose.yml if needed
-cd ./docker-compose.yml || { echo "Directory not found"; exit 1; }
+cd /home/ubuntu/deploy || { echo "Directory not found"; exit 1; }
 
 # Check if docker-compose.yml exists
 if [ -f "./docker-compose.yml" ]; then
