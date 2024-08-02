@@ -50,7 +50,11 @@ sed -i "s|image: ${FE_IMAGE1}:latest|image: ${FE_IMAGE1}:${FE_TAG1}|g" ./docker-
 sed -i "s|image: ${FE_IMAGE2}:latest|image: ${FE_IMAGE2}:${FE_TAG2}|g" ./docker-compose.yml
 sed -i "s|image: ${BE_IMAGE}:latest|image: ${BE_IMAGE}:${BE_TAG}|g" ./docker-compose.yml
 
+# Print the updated contents of docker-compose.yml
+echo "Updated docker-compose.yml contents:"
+cat ./docker-compose.yml
+
 # Run the Docker Compose file to start the containers
 echo "Starting containers with Docker Compose..."
-docker-compose -f BACKUPS/docker-compose.yml up -d
+docker compose up -d
 echo "Containers started with Docker Compose."
