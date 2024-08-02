@@ -1,0 +1,55 @@
+version: "3.7"
+services:
+  user-bot:
+    image: userbot-img:latest
+    ports:
+      - "3001:5000"
+    networks:
+      - mynetwork
+    restart: always
+    depends_on:
+      - agent-be
+
+  agent-fe:
+    image: agentfe-img:latest
+    ports:
+      - "3000:5000"
+    networks:
+      - mynetwork
+    restart: always
+    depends_on:
+      - agent-be
+
+  agent-be:
+    image: agentbe-img:latest
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+    networks:
+      - mynetwork
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=admin
+      - DB_PASSWORD=root
+      - DB_NAME=agent
+      - DB_PORT=3306
+    restart: always
+
+  mysql:
+    image: mysql:latest
+    networks:
+      - mynetwork
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=agent
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=root
+    restart: always
+
+networks:
+  mynetwork:
+    name: full-stack
+    driver: bridge
