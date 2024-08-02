@@ -44,11 +44,16 @@ fi
 
 echo "Checking for docker-compose.yml..."
 ls -l ./docker-compose.yml
+
+echo "FE_TAG1=${FE_TAG1}"
+echo "FE_TAG2=${FE_TAG2}"
+echo "BE_TAG=${BE_TAG}"
+
 # Update docker-compose.yml with the latest tags
 echo "Updating docker-compose.yml with the latest tags..."
-sed -i "s|image: userbot-img:latest|image: ${FE_IMAGE1}:${FE_TAG1}|g" ./docker-compose.yml
-sed -i "s|image: agentfe-img:latest|image: ${FE_IMAGE2}:${FE_TAG2}|g" ./docker-compose.yml
-sed -i "s|image: agentbe-img:latest|image: ${BE_IMAGE}:${BE_TAG}|g" ./docker-compose.yml
+sed -i "s|image: userbot-img:latest|image: userbot-img:${FE_TAG1}|g" ./docker-compose.yml
+sed -i "s|image: agentfe-img:latest|image: agentfe-img:${FE_TAG2}|g" ./docker-compose.yml
+sed -i "s|image: agentbe-img:latest|image: agentbe-img:${BE_TAG}|g" ./docker-compose.yml
 
 # Print the updated contents of docker-compose.yml
 echo "Updated docker-compose.yml contents:"
