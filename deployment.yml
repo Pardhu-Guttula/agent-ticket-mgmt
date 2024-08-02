@@ -33,7 +33,7 @@
 
     - name: Copy docker-compose.yml to target server
       copy:
-        src: /path/to/local/docker-compose.yml
+        src: ./docker-compose.yml
         dest: /home/ubuntu/deploy/docker-compose.yml
         mode: "0644"
 
