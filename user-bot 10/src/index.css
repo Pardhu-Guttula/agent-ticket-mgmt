@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap'); */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+ 
+/* Track */
+::-webkit-scrollbar-track {
+    background: #E0EDE4;
+    border-radius: 5px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+ 
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #F8F8F8;
+;
+}
+
+.dropdownlist::before{
+    content: '';
+    position: absolute;
+    top: -0.6rem;
+    right: 1.1rem;
+    width:18px;
+    height:18px;
+    transform: rotate(45deg);
+    background-color: #FFFFFF;
+    border-left:1px solid gray;
+    border-top: 1px solid gray;
+}
