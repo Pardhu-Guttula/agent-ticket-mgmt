@@ -25,12 +25,18 @@
 
     # - name: Start the new container
     #   command: "docker run --name {{ container_name }} -d -p 8088:80 pardhuguttula/ansible:{{ DOCKER_TAG }}"
+    - name: Create target directory for docker-compose.yml
+      file:
+        path: /home/ubuntu/deploy
+        state: directory
+        mode: "0755"
+
     - name: Copy docker-compose.yml to target server
-      become: yes
       copy:
-        src: ./docker-compose.yml
+        src: /path/to/local/docker-compose.yml
         dest: /home/ubuntu/deploy/docker-compose.yml
         mode: "0644"
+
     - name: Run the stop script
       script: ./deploy.sh # Assuming deploy.sh is in the same directory as the playbook
       ignore_errors: yes
