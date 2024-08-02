@@ -31,9 +31,9 @@ docker pull "${BE_IMAGE}:${BE_TAG}"
 
 # Update docker-compose.yml with the latest tags
 echo "Updating docker-compose.yml with the latest tags..."
-sed -i "s|image: ${FE_IMAGE1}:.*|image: ${FE_IMAGE1}:${FE_TAG1}|g" ./docker-compose.yml
-sed -i "s|image: ${FE_IMAGE2}:.*|image: ${FE_IMAGE2}:${FE_TAG2}|g" ./docker-compose.yml
-sed -i "s|image: ${BE_IMAGE}:.*|image: ${BE_IMAGE}:${BE_TAG}|g" ./docker-compose.yml
+sed -i "s|image: ${FE_IMAGE1}:latest|image: ${FE_IMAGE1}:${FE_TAG1}|g" ./docker-compose.yml
+sed -i "s|image: ${FE_IMAGE2}:latest|image: ${FE_IMAGE2}:${FE_TAG2}|g" ./docker-compose.yml
+sed -i "s|image: ${BE_IMAGE}:latest|image: ${BE_IMAGE}:${BE_TAG}|g" ./docker-compose.yml
 
 # Run the Docker Compose file to start the containers
 echo "Starting containers with Docker Compose..."
