@@ -28,6 +28,20 @@
 
 # echo "Pulling image ${BE_IMAGE}:${BE_TAG}..."
 # docker pull "${BE_IMAGE}:${BE_TAG}"
+
+echo "Current directory: $(pwd)"
+
+# Change to the directory containing docker-compose.yml if needed
+cd ./docker-compose.yml || { echo "Directory not found"; exit 1; }
+
+# Check if docker-compose.yml exists
+if [ -f "./docker-compose.yml" ]; then
+    echo "docker-compose.yml found."
+else
+    echo "docker-compose.yml not found!"
+    exit 1
+fi
+
 echo "Checking for docker-compose.yml..."
 ls -l ./docker-compose.yml
 # Update docker-compose.yml with the latest tags
