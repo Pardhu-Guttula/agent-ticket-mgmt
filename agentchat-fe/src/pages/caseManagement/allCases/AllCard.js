@@ -91,7 +91,7 @@ function AllCard({ searchQuery }) {
           </div>
         </div>
         <div>
-        {filteredCards.length === 0 ? (
+          {filteredCards.length === 0 ? (
             searchQuery ? (
               <div className="p-4 bg-red-100 text-red-600 rounded-md">
                 No card available with Ticket ID:{" "}
@@ -111,13 +111,13 @@ function AllCard({ searchQuery }) {
                 >
                   <div>
                     <h3>
-                      <span className="font-bold">Ticket ID:</span>{" "}
+                      <span className="font-bold">TicketID:</span>{" "}
                       <span>{card.uniqueCaseId}</span>
-                    </h3>                         
+                    </h3>
                     <h2>
                       <span className="font-bold">User Name:</span>{" "}
                       <span>{card.userName}</span>
-                    </h2>                           
+                    </h2>
                     <span className="font-bold">Short Description:</span>
                     <h2 className="break-words text-justify">
                       <span className="text-align">{card.caseDescription}</span>
@@ -176,4 +176,3 @@ function AllCard({ searchQuery }) {
 }
 
 export default AllCard;
- 
