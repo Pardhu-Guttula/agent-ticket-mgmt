@@ -111,7 +111,7 @@ function AllCard({ searchQuery }) {
                 >
                   <div>
                     <h3>
-                      <span className="font-bold">TicketID:</span>{" "}
+                      <span className="font-bold">Ticket ID:</span>{" "}
                       <span>{card.uniqueCaseId}</span>
                     </h3>
                     <h2>
