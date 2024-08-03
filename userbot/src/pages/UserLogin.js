@@ -52,7 +52,7 @@ function UserLogin() {
     if (Object.keys(validationErrors).length === 0) {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/user/login",
+          `${process.env.REACT_APP_API_URL}/api/user/login`,
           formData
         );
         login(response.data);
@@ -67,8 +67,7 @@ function UserLogin() {
 
   return (
     <div className="flex flex-col md:flex-row h-screen">
-      <div className="md:w-1/2 md:flex items-center justify-center bg-[#ffffff] overflow-hidden hidden md:block">
-      </div>
+      <div className="md:w-1/2 md:flex items-center justify-center bg-[#ffffff] overflow-hidden hidden md:block"></div>
       <div className="flex items-center justify-center w-full md:w-1/2 bg-[#D5D8F2] p-4 h-screen md:h-auto">
         <div className="bg-[#ffffff] p-6 rounded-lg shadow-lg flex flex-col w-full max-w-sm mx-auto">
           <h5 className="font-poppins text-xl text-center py-4 text-[#666ee2]">
@@ -140,4 +139,3 @@ function UserLogin() {
 }
 
 export default UserLogin;
- 

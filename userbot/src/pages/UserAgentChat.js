@@ -8,7 +8,6 @@ import agenticon from "../assests/agenticon.png";
 import { MdLogout } from "react-icons/md";
 import { AuthContext } from "../AuthContext";
 
-
 const backgroundStyle = {
   backgroundImage: `url(${agenticon})`,
   backgroundSize: "30%",
@@ -19,7 +18,7 @@ const backgroundStyle = {
 };
 
 function UserAgentChat() {
-  const {logout,authState} = useContext(AuthContext)
+  const { logout, authState } = useContext(AuthContext);
   const msgEnd = useRef(null);
 
   const [question, setQuestion] = useState("");
@@ -34,25 +33,25 @@ function UserAgentChat() {
 
   const [botResponse, setBotResponse] = useState(null);
   const socket = useRef();
-  const userId = authState.userId; 
+  const userId = authState.userId;
 
   useEffect(() => {
     const fetchAgentId = async (userId) => {
-        try {
-            const response = await axios.get(`http://localhost:5000/api/agent/${userId}`); 
-            const agent = response.data.uniqueAgentId;
-            const caseNo = response.data.uniqueCaseId;
-            setAgentId(agent);
-            setCaseId(caseNo);
-           
-        } catch (error) {
-            console.error('Error fetching agentId:', error);
-        }
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/agent/${userId}`
+        );
+        const agent = response.data.uniqueAgentId;
+        const caseNo = response.data.uniqueCaseId;
+        setAgentId(agent);
+        setCaseId(caseNo);
+      } catch (error) {
+        console.error("Error fetching agentId:", error);
+      }
     };
 
     fetchAgentId(userId);
-}, [userId]);
-
+  }, [userId]);
 
   useEffect(() => {
     msgEnd.current.scrollIntoView();
@@ -65,14 +64,12 @@ function UserAgentChat() {
         ...prevMessages,
         { text: data.text, isBot: true },
       ]);
-    })
+    });
   });
 
   useEffect(() => {
-
     socket.current.emit("addUser", userId);
-    socket.current.on("getUsers", (users) => {
-    });
+    socket.current.on("getUsers", (users) => {});
 
     socket.current.on("connect_error", (err) => {
       console.error("Socket connection error:", err);
@@ -101,15 +98,14 @@ function UserAgentChat() {
       receiverId: agentId,
       text: text,
     });
-  
+
     try {
-      await axios.post(`http://localhost:5000/api/chat`, newMessage);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/chat`, newMessage);
     } catch (error) {
       console.error("Failed to send User Message:", error);
     }
-  
   };
-  
+
   useEffect(() => {
     if (
       botResponse &&
@@ -126,9 +122,12 @@ function UserAgentChat() {
   return (
     <div className="bg-primary">
       <div>
-      <div className="absolute right-6 top-1">
-          <MdLogout onClick = {()=>logout()} className="cursor-pointer text-3xl text-[#5058e5] hover:text-[#31368C]"/>
-        </div>     
+        <div className="absolute right-6 top-1">
+          <MdLogout
+            onClick={() => logout()}
+            className="cursor-pointer text-3xl text-[#5058e5] hover:text-[#31368C]"
+          />
+        </div>
         <div
           className="min-h-[calc(100vh-6rem)] max-h-[calc(100vh-6rem)] m-12 flex flex-col bg-[#F8F8F8] rounded-2xl p-2 border-gray-300"
           style={{ ...backgroundStyle, zIndex: 9 }}

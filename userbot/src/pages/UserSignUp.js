@@ -25,7 +25,6 @@ function UserSignUp() {
       [name]: value,
     });
 
-    
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -38,7 +37,6 @@ function UserSignUp() {
     const validationErrors = {};
     const { name, email, password, confirmPassword, mobile } = formData;
 
-    
     const requiredFields = { name, email, password, confirmPassword, mobile };
     for (const [field, value] of Object.entries(requiredFields)) {
       if (!value.trim()) {
@@ -46,7 +44,6 @@ function UserSignUp() {
       }
     }
 
-    
     const nameRegex = /^[a-zA-Z\s]+$/;
     if (!nameRegex.test(name)) {
       validationErrors.name = "Name must contain only letters and spaces";
@@ -54,19 +51,16 @@ function UserSignUp() {
       validationErrors.name = "Name must be between 2 and 50 characters";
     }
 
-    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       validationErrors.email = "Invalid email format";
     }
 
-    
     const mobileRegex = /^\+?[1-9]\d{1,14}$/; // E.164 format
     if (!mobileRegex.test(mobile)) {
       validationErrors.mobile = "Invalid mobile number format";
     }
 
-    
     const minLength = 8;
     const maxLength = 50;
     const hasLetter = /[a-zA-Z]/.test(password);
@@ -80,10 +74,10 @@ function UserSignUp() {
     } else if (!hasNumber) {
       validationErrors.password = "Password must contain at least one number";
     } else if (!hasSpecialChar) {
-      validationErrors.password = "Password must contain at least one special character";
+      validationErrors.password =
+        "Password must contain at least one special character";
     }
 
-    
     if (confirmPassword !== password) {
       validationErrors.confirmPassword = "Passwords do not match";
     }
@@ -98,7 +92,7 @@ function UserSignUp() {
     if (Object.keys(validationErrors).length === 0) {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/user/register",
+          `${process.env.REACT_APP_API_URL}/api/user/register`,
           formData
         );
         setAlertMessage("You have been successfully registered!");
@@ -110,9 +104,9 @@ function UserSignUp() {
       } catch (error) {
         if (error.response && error.response.data) {
           const { error: serverError } = error.response.data;
-          if (serverError === 'Email already exists') {
+          if (serverError === "Email already exists") {
             setErrors({ ...errors, email: serverError });
-          } else if (serverError === 'Mobile number already exists') {
+          } else if (serverError === "Mobile number already exists") {
             setErrors({ ...errors, mobile: serverError });
           } else {
             setAlertMessage("An unexpected error occurred");
@@ -132,10 +126,13 @@ function UserSignUp() {
 
   return (
     <div className="flex flex-col md:flex-row h-screen">
-      {alertMessage && 
-        <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />
-      }
-      
+      {alertMessage && (
+        <AlertMessage
+          message={alertMessage}
+          onClose={() => setAlertMessage("")}
+        />
+      )}
+
       {/* Image Container */}
       <div className="md:w-1/2 md:flex items-center justify-center bg-[#ffffff] overflow-hidden hidden md:block">
         {/* <img src={logo} alt="Logo" className="max-w-full h-auto" /> */}
@@ -159,9 +156,7 @@ function UserSignUp() {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-[#666ee2] focus:border-transparent"
               />
-              {errors.name && (
-                <ErrorMessage message={errors.name} />
-              )}
+              {errors.name && <ErrorMessage message={errors.name} />}
             </div>
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
@@ -175,9 +170,7 @@ function UserSignUp() {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-[#666ee2] focus:border-transparent"
               />
-              {errors.email && (
-                <ErrorMessage message={errors.email} />
-              )}
+              {errors.email && <ErrorMessage message={errors.email} />}
             </div>
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
@@ -191,9 +184,7 @@ function UserSignUp() {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-[#666ee2] focus:border-transparent"
               />
-              {errors.mobile && (
-                <ErrorMessage message={errors.mobile} />
-              )}
+              {errors.mobile && <ErrorMessage message={errors.mobile} />}
             </div>
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
@@ -216,9 +207,7 @@ function UserSignUp() {
                   {visible ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
-              {errors.password && (
-                <ErrorMessage message={errors.password} />
-              )}
+              {errors.password && <ErrorMessage message={errors.password} />}
             </div>
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
@@ -235,7 +224,9 @@ function UserSignUp() {
                 />
                 <button
                   type="button"
-                  onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
+                  onClick={() =>
+                    setConfirmPasswordVisible(!confirmPasswordVisible)
+                  }
                   className="absolute inset-y-0 right-0 px-3 py-1 text-gray-600"
                 >
                   {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
