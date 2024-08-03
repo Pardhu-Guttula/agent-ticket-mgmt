@@ -57,9 +57,7 @@ pipeline {
 
         stage('Ansible') {
             steps {
-                // ansiblePlaybook credentialsId: 'target-server', disableHostKeyChecking: true, extras: "-e DOCKER_TAG=${DOCKER_TAG}", installation: 'ansible', inventory: 'dev.inv', playbook: 'deployment.yml', vaultTmpPath: ''
                 ansiblePlaybook credentialsId: 'dev-server', disableHostKeyChecking: true, extras: "-e DOCKER_TAG=${DOCKER_TAG}", installation: 'Ansible', inventory: 'dev.inv', playbook: 'deployment.yml', vaultTmpPath: ''
-                
             }
         }
     }
