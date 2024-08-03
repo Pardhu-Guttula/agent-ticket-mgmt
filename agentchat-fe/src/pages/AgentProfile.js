@@ -1,8 +1,8 @@
-import axios from 'axios';
-import React, { useState, useContext, useEffect } from 'react';
-import { FaPlusCircle, FaUser } from 'react-icons/fa';
+import axios from "axios";
+import React, { useState, useContext, useEffect } from "react";
+import { FaPlusCircle, FaUser } from "react-icons/fa";
 import { AuthContext } from "../AuthContext";
-import { MdEmail, MdConfirmationNumber, MdPhone } from 'react-icons/md';
+import { MdEmail, MdConfirmationNumber, MdPhone } from "react-icons/md";
 
 const AgentProfile = () => {
   const [profilePic, setProfilePic] = useState(null);
@@ -15,7 +15,9 @@ const AgentProfile = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/profile/${agentId}`);
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/profile/${agentId}`
+        );
         setProfileData(response.data);
         setLoading(false);
       } catch (error) {
@@ -58,7 +60,10 @@ const AgentProfile = () => {
               className="hidden"
               onChange={handleProfilePicChange}
             />
-            <label htmlFor="profilePic" className="cursor-pointer relative inline-block">
+            <label
+              htmlFor="profilePic"
+              className="cursor-pointer relative inline-block"
+            >
               {profilePic ? (
                 <img
                   src={profilePic}
@@ -68,23 +73,37 @@ const AgentProfile = () => {
               ) : (
                 <div className="mx-auto rounded-full w-32 h-32 md:w-40 md:h-40 flex items-center justify-center bg-[#e9ecef] border-card relative">
                   <FaUser size={48} className="text-normal-button" />
-                  <FaPlusCircle size={32} className="text-normal-button absolute bottom-2 right-2" />
+                  <FaPlusCircle
+                    size={32}
+                    className="text-normal-button absolute bottom-2 right-2"
+                  />
                 </div>
               )}
             </label>
-            <h2 className="mt-4 text-3xl font-bold text-gray-800">{profileData.name}</h2>
+            <h2 className="mt-4 text-3xl font-bold text-gray-800">
+              {profileData.name}
+            </h2>
           </div>
           <div className="flex-grow text-center md:text-left space-y-4 md:space-y-6 text-lg">
             <div className="flex items-center justify-center md:justify-start text-gray-600">
-              <MdConfirmationNumber className="inline-block mr-3 ml-8 text-normal-button" size={22} />
+              <MdConfirmationNumber
+                className="inline-block mr-3 ml-8 text-normal-button"
+                size={22}
+              />
               <span>{profileData.id}</span>
             </div>
             <div className="flex items-center justify-center md:justify-start text-gray-600">
-              <MdPhone className="inline-block mr-3 ml-8 text-normal-button" size={22} />
+              <MdPhone
+                className="inline-block mr-3 ml-8 text-normal-button"
+                size={22}
+              />
               <span>{profileData.mobile}</span>
             </div>
             <div className="flex items-center justify-center md:justify-start text-gray-600">
-              <MdEmail className="inline-block mr-3 ml-8 text-normal-button" size={22} />
+              <MdEmail
+                className="inline-block mr-3 ml-8 text-normal-button"
+                size={22}
+              />
               <span>{profileData.email}</span>
             </div>
           </div>

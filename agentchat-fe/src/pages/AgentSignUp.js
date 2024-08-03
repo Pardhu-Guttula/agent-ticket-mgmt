@@ -23,7 +23,6 @@ function AgentSignUp() {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
-    
     if (errors[name]) {
       setErrors({ ...errors, [name]: null });
     }
@@ -33,7 +32,6 @@ function AgentSignUp() {
     const validationErrors = {};
     const { name, email, password, confirmPassword, mobile } = formData;
 
-    
     const requiredFields = { name, email, password, confirmPassword, mobile };
     for (const [field, value] of Object.entries(requiredFields)) {
       if (!value.trim()) {
@@ -41,7 +39,6 @@ function AgentSignUp() {
       }
     }
 
-   
     const nameRegex = /^[a-zA-Z\s]+$/;
     if (!nameRegex.test(name)) {
       validationErrors.name = "Name must contain only letters and spaces";
@@ -49,19 +46,16 @@ function AgentSignUp() {
       validationErrors.name = "Name must be between 2 and 50 characters";
     }
 
-    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       validationErrors.email = "Invalid email format";
     }
 
-    
     const mobileRegex = /^\+?[1-9]\d{1,14}$/; // E.164 format
     if (!mobileRegex.test(mobile)) {
       validationErrors.mobile = "Invalid mobile number format";
     }
 
-    
     const minLength = 8;
     const maxLength = 50;
     const hasLetter = /[a-zA-Z]/.test(password);
@@ -75,10 +69,10 @@ function AgentSignUp() {
     } else if (!hasNumber) {
       validationErrors.password = "Password must contain at least one number";
     } else if (!hasSpecialChar) {
-      validationErrors.password = "Password must contain at least one special character";
+      validationErrors.password =
+        "Password must contain at least one special character";
     }
 
-    
     if (confirmPassword !== password) {
       validationErrors.confirmPassword = "Passwords do not match";
     }
@@ -93,7 +87,7 @@ function AgentSignUp() {
     if (Object.keys(validationErrors).length === 0) {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/auth/register",
+          `${process.env.REACT_APP_API_URL}/api/auth/register`,
           formData
         );
 
@@ -109,7 +103,8 @@ function AgentSignUp() {
             if (response.data.error.includes("Mobile number already exists")) {
               setErrors({
                 ...errors,
-                mobile: "Mobile number already exists. Please use a different number.",
+                mobile:
+                  "Mobile number already exists. Please use a different number.",
               });
             } else if (response.data.error.includes("Email already exists")) {
               setErrors({
@@ -133,12 +128,17 @@ function AgentSignUp() {
         // Handling errors from the server or network issues
         if (error.response && error.response.data) {
           console.error("Error response:", error.response.data);
-          if (error.response.data.error.includes("Mobile number already exists")) {
+          if (
+            error.response.data.error.includes("Mobile number already exists")
+          ) {
             setErrors({
               ...errors,
-              mobile: "Mobile number already exists. Please use a different number.",
+              mobile:
+                "Mobile number already exists. Please use a different number.",
             });
-          } else if (error.response.data.error.includes("Email already exists")) {
+          } else if (
+            error.response.data.error.includes("Email already exists")
+          ) {
             setErrors({
               ...errors,
               email: "Email already exists. Please use a different email.",
@@ -146,7 +146,9 @@ function AgentSignUp() {
           } else {
             setErrors({
               ...errors,
-              email: error.response.data.error || "An unexpected error occurred. Please try again.",
+              email:
+                error.response.data.error ||
+                "An unexpected error occurred. Please try again.",
             });
           }
         } else {
@@ -165,7 +167,10 @@ function AgentSignUp() {
   return (
     <div className="flex flex-col md:flex-row h-screen">
       {alertMessage && (
-        <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />
+        <AlertMessage
+          message={alertMessage}
+          onClose={() => setAlertMessage("")}
+        />
       )}
       {/* Image Container */}
       <div className="md:w-1/2 md:flex items-center justify-center bg-[#ffffff] overflow-hidden hidden md:block">
@@ -179,7 +184,9 @@ function AgentSignUp() {
           </h5>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Name
+              </label>
               <input
                 value={formData.name}
                 type="text"
@@ -193,7 +200,9 @@ function AgentSignUp() {
               )}
             </div>
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
               <input
                 type="email"
                 name="email"
@@ -207,7 +216,9 @@ function AgentSignUp() {
               )}
             </div>
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Mobile</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Mobile
+              </label>
               <input
                 type="text"
                 name="mobile"
@@ -221,7 +232,9 @@ function AgentSignUp() {
               )}
             </div>
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Password</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
               <div className="relative">
                 <input
                   value={formData.password}
@@ -243,7 +256,9 @@ function AgentSignUp() {
               )}
             </div>
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Confirm Password
+              </label>
               <div className="relative">
                 <input
                   value={formData.confirmPassword}
@@ -255,7 +270,9 @@ function AgentSignUp() {
                 />
                 <div
                   className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-                  onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
+                  onClick={() =>
+                    setConfirmPasswordVisible(!confirmPasswordVisible)
+                  }
                 >
                   {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
                 </div>
@@ -273,7 +290,10 @@ function AgentSignUp() {
           </form>
           <p className="text-center text-sm mt-4">
             Already have an account?{" "}
-            <Link to="/login" className="text-[#666ee2] font-medium hover:underline">
+            <Link
+              to="/login"
+              className="text-[#666ee2] font-medium hover:underline"
+            >
               Log In
             </Link>
           </p>

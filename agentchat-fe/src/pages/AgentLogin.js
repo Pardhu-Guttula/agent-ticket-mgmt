@@ -16,7 +16,6 @@ function AgentLogin() {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-
   useEffect(() => {
     const storedUser = localStorage.getItem("agentId");
     if (storedUser) {
@@ -62,7 +61,7 @@ function AgentLogin() {
     if (Object.keys(validationErrors).length === 0) {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/auth/login",
+          `${process.env.REACT_APP_API_URL}/api/auth/login`,
           formData
         );
         login(response.data);
@@ -77,11 +76,10 @@ function AgentLogin() {
 
   return (
     <div className="flex flex-col md:flex-row h-screen">
-    
       <div className="md:w-1/2 md:flex items-center justify-center bg-[#ffffff] overflow-hidden hidden md:block">
         <img src={image} alt="Logo" className="max-w-full h-auto" />
       </div>
-     
+
       <div className="flex items-center justify-center w-full md:w-1/2 bg-[#D5D8F2] p-4 h-screen md:h-auto">
         <div className="bg-[#ffffff] p-6 rounded-lg shadow-lg flex flex-col w-full max-w-sm mx-auto">
           <h5 className="font-poppins text-xl text-center py-4 text-[#666ee2]">
@@ -153,5 +151,3 @@ function AgentLogin() {
 }
 
 export default AgentLogin;
-
- 
