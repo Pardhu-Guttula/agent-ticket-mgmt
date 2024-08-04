@@ -12,15 +12,33 @@ export class CaseService {
     try {
       return await this.caseRepository.getCasesByType(caseType);
     } catch (error) {
-      throw error;
+      if (error instanceof Error) {
+        throw error;
+      } else {
+        throw new Error(
+          "An unexpected error occurred while fetching cases by type."
+        );
+      }
     }
   }
 
-  async getCasesByTypeAndAgent(caseType: CaseTypes, agentId: string): Promise<any[]> {
+  async getCasesByTypeAndAgent(
+    caseType: CaseTypes,
+    agentId: string
+  ): Promise<any[]> {
     try {
-      return await this.caseRepository.getCasesByTypeAndAgent(caseType, agentId);
+      return await this.caseRepository.getCasesByTypeAndAgent(
+        caseType,
+        agentId
+      );
     } catch (error) {
-      throw error;
+      if (error instanceof Error) {
+        throw error;
+      } else {
+        throw new Error(
+          "An unexpected error occurred while fetching cases by type and agent."
+        );
+      }
     }
   }
 }

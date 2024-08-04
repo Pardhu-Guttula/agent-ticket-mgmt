@@ -18,7 +18,7 @@ describe("Profile Routes", () => {
   describe("GET /api/profile/:agentId", () => {
     it("should retrieve the profile for the given agentId", async () => {
       const mockProfile = {
-        id: "1",
+        id: "A00001",
         name: "John Doe",
         email: "john.doe@example.com",
       };
