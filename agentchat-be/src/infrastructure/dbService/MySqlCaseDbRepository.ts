@@ -20,7 +20,10 @@ export class CaseDbRepository implements ICaseDbRepository {
     }
   }
 
-  async getCasesByTypeAndAgent(caseType: CaseTypes, agentId: string): Promise<any[]> {
+  async getCasesByTypeAndAgent(
+    caseType: CaseTypes,
+    agentId: string
+  ): Promise<any[]> {
     try {
       const query = `
         SELECT fc.uniqueCaseId, fc.caseDescription, du.userName, fc.caseCreatedAt, fc.completionNote, fc.caseAcceptedAt
@@ -35,7 +38,11 @@ export class CaseDbRepository implements ICaseDbRepository {
     }
   }
 
-  async updateCaseStatusById(uniqueCaseId: string, newStatus: string, agentId: string): Promise<void> {
+  async updateCaseStatusById(
+    uniqueCaseId: string,
+    newStatus: string,
+    agentId: string
+  ): Promise<void> {
     try {
       const query = `
         UPDATE factCase
@@ -90,17 +97,26 @@ export class CaseDbRepository implements ICaseDbRepository {
   }
 
   async createCase(caseData: any): Promise<void> {
-  try {
-    const { caseDescription, caseStatus, caseCreatedAt, uniqueUserId } = caseData;
-    const query = `
+    try {
+      const {
+        caseDescription,
+        caseStatus,
+        caseCreatedAt,
+        uniqueUserId,
+      } = caseData;
+      const query = `
       INSERT INTO factCase ( caseDescription, caseStatus, caseCreatedAt, uniqueUserId, uniqueAgentId)
       VALUES ( ?, ?, ?, ?, 'A00001')
     `;
-    await db.query(query, [caseDescription, caseStatus, caseCreatedAt, uniqueUserId]);
-  } catch (error) {
-    console.error("Error in createCase:", error);
-    throw error;
+      await db.query(query, [
+        caseDescription,
+        caseStatus,
+        caseCreatedAt,
+        uniqueUserId,
+      ]);
+    } catch (error) {
+      console.error("Error in createCase:", error);
+      throw error;
+    }
   }
 }
-}
- 

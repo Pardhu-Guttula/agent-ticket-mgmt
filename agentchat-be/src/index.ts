@@ -1,18 +1,18 @@
 import express from "express";
 import cors from "cors";
-import dotenv from 'dotenv';
-import bodyParser from 'body-parser';
-import caseRoutes from './interface/routes/CaseRoutes';
+import dotenv from "dotenv";
+import bodyParser from "body-parser";
+import caseRoutes from "./interface/routes/CaseRoutes";
 import setupSwagger from "./utils/swagger";
 import http from "http";
 import { Server } from "socket.io";
 import conversationRoutes from "./interface/routes/ConversationRoutes";
 import chatRoutes from "./interface/routes/ChatRoutes";
 import authRoutes from "./interface/routes/AuthRoutes";
-import userRoutes from "./interface/routes/UserRoutes"
+import userRoutes from "./interface/routes/UserRoutes";
 import ProfileRoute from "./interface/routes/ProfileRoute";
 import AgentRoute from "./interface/routes/AgentRoute";
-import AgentStatsRoutes from "./interface/routes/AgentStatsRoutes"
+import AgentStatsRoutes from "./interface/routes/AgentStatsRoutes";
 
 dotenv.config();
 
@@ -24,11 +24,11 @@ app.use(express.json());
 app.use("/api/cases", caseRoutes);
 app.use("/api/conversation", conversationRoutes);
 app.use("/api/chat", chatRoutes);
-app.use('/api/auth',authRoutes);
-app.use("/api/profile",ProfileRoute);
-app.use("/api/agent",AgentRoute);
-app.use("/api/user",userRoutes);
-app.use("/api/agentstats",AgentStatsRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/profile", ProfileRoute);
+app.use("/api/agent", AgentRoute);
+app.use("/api/user", userRoutes);
+app.use("/api/agentstats", AgentStatsRoutes);
 setupSwagger(app);
 
 const server = http.createServer(app);
@@ -62,10 +62,9 @@ const getUser = (userId: string): User | undefined => {
 };
 
 io.on("connection", (socket) => {
-
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
-    io.emit("getUsers",users);
+    io.emit("getUsers", users);
   });
 
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
@@ -89,4 +88,4 @@ server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
- 
+export default app;
