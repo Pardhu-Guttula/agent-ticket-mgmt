@@ -21,15 +21,23 @@ export const getCases = async (req: Request, res: Response) => {
     const caseTypeParam = req.query.caseType as keyof typeof CaseTypes;
     const agentId = req.query.agentId as string;
 
-    if (!(caseTypeParam in CaseTypes)) {
-      console.error("Invalid caseType:", caseTypeParam);
-      return handle400Error(res, "Invalid caseType");
-    }
+    const caseType =
+      caseTypeParam && caseTypeParam in CaseTypes
+        ? CaseTypes[caseTypeParam]
+        : CaseTypes.Pending;
 
-    const caseType = CaseTypes[caseTypeParam];
+    console.log(
+      "Fetching cases with caseType:",
+      caseType,
+      "and agentId:",
+      agentId
+    );
+
     const cases = await getCasesQuery.execute(caseType, agentId);
+
     res.json(cases);
   } catch (error) {
+    console.error("Error retrieving cases:", error);
     handle500Error(res, error);
   }
 };
@@ -38,16 +46,23 @@ export const updateCaseStatus = async (req: Request, res: Response) => {
   const { uniqueCaseId } = req.params;
   const { agentId, caseType } = req.body;
 
+  console.log("Received request to update case status:");
+  console.log("uniqueCaseId:", uniqueCaseId);
+  console.log("agentId:", agentId);
+  console.log("caseType:", caseType);
+
   if (!agentId || !caseType) {
     return res.status(400).json({ error: "agentId and caseType are required" });
   }
 
   try {
+    if (!(caseType in CaseTypes)) {
+      return handle400Error(res, "Invalid caseType");
+    }
     await caseRepository.updateCaseStatusById(uniqueCaseId, caseType, agentId);
     res.json({ message: "Case status updated successfully" });
   } catch (error) {
-    console.error("Error updating case status:", error);
-    res.status(500).json({ error: "Failed to update case status" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -55,9 +70,7 @@ export const createTicket = async (req: Request, res: Response) => {
   const { uniqueCaseId, agentId } = req.body;
 
   if (!uniqueCaseId || !agentId) {
-    return res
-      .status(400)
-      .json({ error: "uniqueCaseId and agentId are required" });
+    return handle400Error(res, "uniqueCaseId and agentId are required");
   }
 
   try {
@@ -70,6 +83,13 @@ export const createTicket = async (req: Request, res: Response) => {
       ticketUrl,
       uniqueTicketId,
     });
+    res
+      .status(201)
+      .json({
+        message: "Ticket created successfully",
+        ticketUrl,
+        uniqueTicketId,
+      });
   } catch (error) {
     console.error("Error creating ticket:", error);
     handle500Error(res, error);
@@ -90,13 +110,40 @@ export const getTicketId = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Error fetching ticket URL:", error);
-    res.status(500).json({ error: "Failed to fetch ticket URL" });
+    handle500Error(res, error);
   }
 };
+
+// export const createCase = async (req: Request, res: Response) => {
+//   const { uniqueUserId } = req.params;
+//   const caseData = req.body;
+
+//   if (!uniqueUserId) {
+//     return handle400Error(res, "uniqueUserId is required");
+//   }
+
+//   try {
+//     caseData.uniqueUserId = uniqueUserId;
+//     await createCaseUseCase.execute(caseData);
+//     res.status(201).json({ message: "Case created successfully" });
+//   }  catch (error) {
+//     console.error("Error creating new case:", error);
+//     res.status(500).json({ error: "Failed to create case" });
+//   }
+// };
 
 export const createCase = async (req: Request, res: Response) => {
   const { uniqueUserId } = req.params;
   const caseData = req.body;
+
+  if (
+    !uniqueUserId ||
+    !caseData.caseDescription ||
+    !caseData.caseStatus ||
+    !caseData.caseCreatedAt
+  ) {
+    return res.status(400).json({ error: "Failed to create case" });
+  }
 
   try {
     caseData.uniqueUserId = uniqueUserId;
