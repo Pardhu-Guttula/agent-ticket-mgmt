@@ -1,4 +1,4 @@
-import { CaseDbRepository } from "../../infrastructure/dbService/MySqlCaseDbRepository"
+import { CaseDbRepository } from "../../infrastructure/dbService/MySqlCaseDbRepository";
 
 export class CreateCaseCommand {
   private caseRepository: CaseDbRepository;
@@ -11,4 +11,3 @@ export class CreateCaseCommand {
     await this.caseRepository.createCase(caseData);
   }
 }
- 
