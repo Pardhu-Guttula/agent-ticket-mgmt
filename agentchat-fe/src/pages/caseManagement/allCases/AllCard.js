@@ -33,7 +33,7 @@ function AllCard({ searchQuery }) {
   const handleChatClick = async (acceptedCard) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/conversation/${agentId}`
+        `${process.env.REACT_APP_API_URL}/api/conversation/${agentId}`
       );
       const users = response.data;
       navigate("/AgentChat", { state: { selectedUser: acceptedCard, users } });

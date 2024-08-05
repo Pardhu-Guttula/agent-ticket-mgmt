@@ -26,18 +26,12 @@ export const getCases = async (req: Request, res: Response) => {
         ? CaseTypes[caseTypeParam]
         : CaseTypes.Pending;
 
-    console.log(
-      "Fetching cases with caseType:",
-      caseType,
-      "and agentId:",
-      agentId
-    );
+    console.log("Fetching cases with caseType:", caseType);
 
-    const cases = await getCasesQuery.execute(caseType, agentId);
+    const cases = await getCasesQuery.execute(caseType);
 
     res.json(cases);
   } catch (error) {
-    console.error("Error retrieving cases:", error);
     handle500Error(res, error);
   }
 };
@@ -83,13 +77,11 @@ export const createTicket = async (req: Request, res: Response) => {
       ticketUrl,
       uniqueTicketId,
     });
-    res
-      .status(201)
-      .json({
-        message: "Ticket created successfully",
-        ticketUrl,
-        uniqueTicketId,
-      });
+    res.status(201).json({
+      message: "Ticket created successfully",
+      ticketUrl,
+      uniqueTicketId,
+    });
   } catch (error) {
     console.error("Error creating ticket:", error);
     handle500Error(res, error);
