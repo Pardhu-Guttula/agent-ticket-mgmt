@@ -1,67 +1,139 @@
-// import { CreateCaseCommand } from "../../../application/commands/CreateCase";
-// import { CaseDbRepository } from "../../../infrastructure/dbService/MySqlCaseDbRepository";
+import { CaseTypes } from "../../../domain/common/ApplicationEnums";
+import { CaseService } from "../../../domain/services/CaseService";
+import { ICaseDbRepository } from "../../../infrastructure/dbRepositories/ICaseDbRepository";
+import { GetCasesQuery } from "../../../application/queries/GetCases";
 
-// jest.mock("../../../infrastructure/dbService/MySqlCaseDbRepository");
+// Mocking ICaseDbRepository
+const mockICaseDbRepository = (): jest.Mocked<ICaseDbRepository> => ({
+  createCase: jest.fn(),
+  getCasesByType: jest.fn(),
+  getCasesByTypeAndAgent: jest.fn(),
+});
 
-// describe("CreateCaseCommand", () => {
-//   let caseRepository: jest.Mocked<CaseDbRepository>;
-//   let createCaseCommand: CreateCaseCommand;
+describe("GetCasesQuery", () => {
+  let caseServiceMock: jest.Mocked<CaseService>;
+  let getCasesQuery: GetCasesQuery;
+  let caseRepositoryMock: jest.Mocked<ICaseDbRepository>;
 
-//   beforeEach(() => {
-//     caseRepository = new CaseDbRepository() as jest.Mocked<CaseDbRepository>;
-//     createCaseCommand = new CreateCaseCommand(caseRepository);
-//   });
+  beforeEach(() => {
+    caseRepositoryMock = mockICaseDbRepository();
+    caseServiceMock = new CaseService(caseRepositoryMock) as jest.Mocked<
+      CaseService
+    >;
+    getCasesQuery = new GetCasesQuery(caseServiceMock);
+  });
 
-//   describe("execute", () => {
-//     it("should successfully create a case", async () => {
-//       const caseData = {
-//         caseDescription: "Issue with login",
-//         caseStatus: "Pending",
-//         caseCreatedAt: new Date().toISOString(),
-//       };
+  describe("execute", () => {
+    it("should return cases by type when no agentId is provided", async () => {
+      // Arrange
+      const caseType = CaseTypes.Escalated;
+      const cases = [
+        { id: "1", type: caseType },
+        { id: "2", type: caseType },
+      ];
+      caseRepositoryMock.getCasesByType.mockResolvedValue(cases);
 
-//       caseRepository.createCase.mockResolvedValueOnce(undefined);
+      // Act
+      const result = await getCasesQuery.execute(caseType);
 
-//       await createCaseCommand.execute(caseData);
+      // Assert
+      expect(result).toEqual(cases);
+      expect(caseRepositoryMock.getCasesByType).toHaveBeenCalledWith(caseType);
+      expect(caseRepositoryMock.getCasesByType).toHaveBeenCalledTimes(1);
+      expect(caseRepositoryMock.getCasesByTypeAndAgent).not.toHaveBeenCalled();
+    });
 
-//       expect(caseRepository.createCase).toHaveBeenCalledWith(caseData);
-//       expect(caseRepository.createCase).toHaveBeenCalledTimes(1);
-//     });
+    it("should return cases by type and agentId when agentId is provided", async () => {
+      // Arrange
+      const caseType = CaseTypes.Escalated;
+      const agentId = "A00007";
+      const cases = [
+        { id: "1", type: caseType, agentId },
+        { id: "2", type: caseType, agentId },
+      ];
+      caseRepositoryMock.getCasesByTypeAndAgent.mockResolvedValue(cases);
 
-//     it("should handle errors when createCase fails", async () => {
-//       const caseData = {
-//         caseDescription: "Issue with login",
-//         caseStatus: "Pending",
-//         caseCreatedAt: new Date().toISOString(),
-//       };
+      // Act
+      const result = await getCasesQuery.execute(caseType, agentId);
 
-//       const errorMessage = "Failed to create case";
-//       caseRepository.createCase.mockRejectedValueOnce(new Error(errorMessage));
+      // Assert
+      expect(result).toEqual(cases);
+      expect(caseRepositoryMock.getCasesByTypeAndAgent).toHaveBeenCalledWith(
+        caseType,
+        agentId
+      );
+      expect(caseRepositoryMock.getCasesByTypeAndAgent).toHaveBeenCalledTimes(
+        1
+      );
+      expect(caseRepositoryMock.getCasesByType).not.toHaveBeenCalled();
+    });
 
-//       await expect(createCaseCommand.execute(caseData)).rejects.toThrow(
-//         errorMessage
-//       );
+    it("should return an empty array if no cases are found for the given type", async () => {
+      // Arrange
+      const caseType = CaseTypes.Closed; // Assuming this type might have no cases
+      caseRepositoryMock.getCasesByType.mockResolvedValue([]);
 
-//       expect(caseRepository.createCase).toHaveBeenCalledWith(caseData);
-//       expect(caseRepository.createCase).toHaveBeenCalledTimes(1);
-//     });
+      // Act
+      const result = await getCasesQuery.execute(caseType);
 
-//     it("should handle invalid case data", async () => {
-//       const invalidCaseData = {
-//         caseDescription: "",
-//         caseStatus: "",
-//         caseCreatedAt: new Date().toISOString(),
-//       };
+      // Assert
+      expect(result).toEqual([]);
+      expect(caseRepositoryMock.getCasesByType).toHaveBeenCalledWith(caseType);
+      expect(caseRepositoryMock.getCasesByType).toHaveBeenCalledTimes(1);
+    });
 
-//       const errorMessage = "Invalid case data";
-//       caseRepository.createCase.mockRejectedValueOnce(new Error(errorMessage));
+    it("should throw an error if CaseService.getCasesByType throws an error", async () => {
+      // Arrange
+      const caseType = CaseTypes.Escalated;
+      const error = new Error("Service Error");
+      caseRepositoryMock.getCasesByType.mockRejectedValue(error);
 
-//       await expect(createCaseCommand.execute(invalidCaseData)).rejects.toThrow(
-//         errorMessage
-//       );
+      // Act & Assert
+      await expect(getCasesQuery.execute(caseType)).rejects.toThrow(
+        "An unexpected error occurred while fetching cases by type."
+      );
+    });
 
-//       expect(caseRepository.createCase).toHaveBeenCalledWith(invalidCaseData);
-//       expect(caseRepository.createCase).toHaveBeenCalledTimes(1);
-//     });
-//   });
-// });
+    it("should throw an error if CaseService.getCasesByTypeAndAgent throws an error", async () => {
+      // Arrange
+      const caseType = CaseTypes.Escalated;
+      const agentId = "A00007";
+      const error = new Error("Service Error");
+      caseRepositoryMock.getCasesByTypeAndAgent.mockRejectedValue(error);
+
+      // Act & Assert
+      await expect(getCasesQuery.execute(caseType, agentId)).rejects.toThrow(
+        "An unexpected error occurred while fetching cases by type and agent."
+      );
+    });
+
+    it("should handle unexpected exceptions gracefully when no agentId is provided", async () => {
+      // Arrange
+      const caseType = CaseTypes.Escalated;
+      const error = { unexpected: "Non-standard error" }; // Simulating a non-Error object
+      caseRepositoryMock.getCasesByType.mockRejectedValue(error);
+
+      // Act & Assert
+      await expect(getCasesQuery.execute(caseType)).rejects.toThrow(
+        "An unexpected error occurred while fetching cases by type."
+      );
+    });
+
+    it("should handle unexpected exceptions gracefully when agentId is provided", async () => {
+      // Arrange
+      const caseType = CaseTypes.Escalated;
+      const agentId = "A00007";
+      const error = { unexpected: "Non-standard error" }; // Simulating a non-Error object
+      caseRepositoryMock.getCasesByTypeAndAgent.mockRejectedValue(error);
+
+      // Act & Assert
+      await expect(getCasesQuery.execute(caseType, agentId)).rejects.toThrow(
+        "An unexpected error occurred while fetching cases by type and agent."
+      );
+    });
+
+    it("should create an instance of GetCasesQuery", () => {
+      expect(getCasesQuery).toBeDefined();
+    });
+  });
+});
