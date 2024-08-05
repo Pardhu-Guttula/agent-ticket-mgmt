@@ -194,4 +194,24 @@ const config = {
   // watchman: true,
 };
 
-module.exports = config;
+module.exports = {
+  preset: "ts-jest",
+  testEnvironment: "node",
+  collectCoverage: true, // Enables coverage collection
+  coverageDirectory: "coverage", // Directory to output coverage reports
+  coverageReporters: ["json", "lcov", "text", "clover"], // Types of reports
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 90,
+      lines: 85,
+      statements: 85,
+    },
+  },
+  collectCoverageFrom: [
+    "src/**/*.{js,ts}", // Include JS and TS files
+    "!src/**/*.d.ts", // Exclude TypeScript declaration files
+    "!src/**/index.{js,ts}", // Exclude index files
+  ],
+  verbose: true,
+};
