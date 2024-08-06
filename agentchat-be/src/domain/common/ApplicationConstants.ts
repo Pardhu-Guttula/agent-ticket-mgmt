@@ -45,7 +45,7 @@ export const handle404Error = (res: Response, message?: string): void => {
 };
 
 export const handle500Error = (res: Response, error?: unknown): void => {
-  // console.error("Unhandled error:", error);
+  console.error("Unhandled error:", error);
   const errorMessage =
     error instanceof Error ? error.message : errorMessages[500];
   handleHttpError(res, 500, errorMessage);

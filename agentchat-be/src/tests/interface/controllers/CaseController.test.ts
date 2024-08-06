@@ -37,15 +37,15 @@ describe("Case Controller", () => {
       expect(response.body).toBeInstanceOf(Array);
     });
 
-    // it("should return 500 if an unexpected server error occurs", async () => {
-    //   jest.spyOn(GetCasesQuery.prototype, "execute").mockImplementation(() => {
-    //     throw new Error("Internal Server Error");
-    //   });
+    it("should return 500 if an unexpected server error occurs", async () => {
+      jest.spyOn(GetCasesQuery.prototype, "execute").mockImplementation(() => {
+        throw new Error("Internal Server Error");
+      });
 
-    //   const response = await request(app).get("/api/cases");
-    //   expect(response.status).toBe(500);
-    //   expect(response.body.error).toBe("Internal Server Error");
-    // });
+      const response = await request(app).get("/api/cases");
+      expect(response.status).toBe(500);
+      expect(response.body.error).toBe("Internal Server Error");
+    });
   });
 
   describe("PUT /api/cases/accept/:uniqueCaseId", () => {
@@ -120,23 +120,23 @@ describe("Case Controller", () => {
       expect(response.body.error).toBe("uniqueCaseId and agentId are required");
     });
 
-    // it("should return 500 for unexpected server errors", async () => {
-    //   jest
-    //     .spyOn(CaseDbRepository.prototype, "createTicket")
-    //     .mockImplementation(() => {
-    //       throw new Error("Internal Server Error");
-    //     });
+    it("should return 500 for unexpected server errors", async () => {
+      jest
+        .spyOn(CaseDbRepository.prototype, "createTicket")
+        .mockImplementation(() => {
+          throw new Error("Internal Server Error");
+        });
 
-    //   const response = await request(app)
-    //     .post("/api/cases/create-ticket")
-    //     .send({
-    //       uniqueCaseId: "C00001",
-    //       agentId: "A00001",
-    //     });
+      const response = await request(app)
+        .post("/api/cases/create-ticket")
+        .send({
+          uniqueCaseId: "C00001",
+          agentId: "A00001",
+        });
 
-    //   expect(response.status).toBe(500);
-    //   expect(response.body.error).toBe("Internal Server Error");
-    // });
+      expect(response.status).toBe(500);
+      expect(response.body.error).toBe("Internal Server Error");
+    });
   });
 
   describe("GET /api/cases/ticketId/:uniqueCaseId", () => {
@@ -155,17 +155,17 @@ describe("Case Controller", () => {
       expect(response.body.error).toBe("Ticket not found");
     });
 
-    // it("should return 500 for unexpected server errors", async () => {
-    //   jest
-    //     .spyOn(CaseDbRepository.prototype, "getTicketByCaseId")
-    //     .mockImplementation(() => {
-    //       throw new Error("Internal Server Error");
-    //     });
+    it("should return 500 for unexpected server errors", async () => {
+      jest
+        .spyOn(CaseDbRepository.prototype, "getTicketByCaseId")
+        .mockImplementation(() => {
+          throw new Error("Internal Server Error");
+        });
 
-    //   const response = await request(app).get("/api/cases/ticketId/C00001");
-    //   expect(response.status).toBe(500);
-    //   expect(response.body.error).toBe("Internal Server Error");
-    // });
+      const response = await request(app).get("/api/cases/ticketId/C00001");
+      expect(response.status).toBe(500);
+      expect(response.body.error).toBe("Internal Server Error");
+    });
   });
 
   describe("POST /api/cases/createCase/:uniqueUserId", () => {
@@ -191,23 +191,23 @@ describe("Case Controller", () => {
       expect(response.body.error).toBe("Failed to create case");
     });
 
-    // it("should return 500 for unexpected server errors", async () => {
-    //   jest
-    //     .spyOn(CreateCaseCommand.prototype, "execute")
-    //     .mockImplementation(() => {
-    //       throw new Error("Internal Server Error");
-    //     });
+    it("should return 500 for unexpected server errors", async () => {
+      jest
+        .spyOn(CreateCaseCommand.prototype, "execute")
+        .mockImplementation(() => {
+          throw new Error("Internal Server Error");
+        });
 
-    //   const response = await request(app)
-    //     .post("/api/cases/createCase/U00001")
-    //     .send({
-    //       caseDescription: "Issue with Login credentials",
-    //       caseStatus: "Pending",
-    //       caseCreatedAt: "2024-07-30 15:33:00",
-    //     });
+      const response = await request(app)
+        .post("/api/cases/createCase/U00001")
+        .send({
+          caseDescription: "Issue with Login credentials",
+          caseStatus: "Pending",
+          caseCreatedAt: "2024-07-30 15:33:00",
+        });
 
-    //   expect(response.status).toBe(500);
-    //   expect(response.body.error).toBe("Failed to create case");
-    // });
+      expect(response.status).toBe(500);
+      expect(response.body.error).toBe("Failed to create case");
+    });
   });
 });
